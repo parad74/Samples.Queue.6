@@ -19,10 +19,13 @@ public class RabbitMqListener : BackgroundService
 		// в файл конфигурации
 		var factory = new ConnectionFactory();
 		//factory.Uri = new Uri("amqps://jfjcwtsi:B42QcuK7Chr_NoOU18aP1HdfrZxQrzqD@jackal.rmq.cloudamqp.com/jfjcwtsi");
-		factory.UserName = "jfjcwtsi";
-		factory.Password = "B42QcuK7Chr_NoOU18aP1HdfrZxQrzqD";
-		factory.VirtualHost = "jfjcwtsi";
-		factory.HostName = "jackal-01.rmq.cloudamqp.com";
+		//factory.UserName = "jfjcwtsi";
+		//factory.Password = "B42QcuK7Chr_NoOU18aP1HdfrZxQrzqD";
+		//factory.VirtualHost = "jfjcwtsi";
+		//factory.HostName = "jackal-01.rmq.cloudamqp.com";
+		factory.UserName = "guesti";
+		factory.Password = "guest";
+		factory.HostName = "localhost";
 
 		this._connection = factory.CreateConnection();
 		this._channel = _connection.CreateModel();

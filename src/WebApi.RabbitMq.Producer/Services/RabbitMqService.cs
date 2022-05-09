@@ -72,16 +72,16 @@ namespace Rabbit.WebApi.Services
         {
             // Не забудьте вынести значения "localhost" и "MyQueue"
             // в файл конфигурации
-            //var factory = new ConnectionFactory() { HostName = "localhost" };         //продюсер для локального сервера RabbitMQ  // { Uri = new Uri("строка_подключения") };
-            var factory = new ConnectionFactory();
+          //  var factory = new ConnectionFactory();
             //factory.Uri = new Uri("amqps://jfjcwtsi:B42QcuK7Chr_NoOU18aP1HdfrZxQrzqD@jackal.rmq.cloudamqp.com/jfjcwtsi");
-            factory.UserName = "jfjcwtsi";
-            factory.Password = "B42QcuK7Chr_NoOU18aP1HdfrZxQrzqD";
-            factory.VirtualHost = "jfjcwtsi";
-            factory.HostName = "jackal-01.rmq.cloudamqp.com";
+            //factory.UserName = "jfjcwtsi";
+            //factory.Password = "B42QcuK7Chr_NoOU18aP1HdfrZxQrzqD";
+            //factory.VirtualHost = "jfjcwtsi";
+            //factory.HostName = "jackal-01.rmq.cloudamqp.com";
 
-            using (var connection = factory.CreateConnection())
-            using (var channel = connection.CreateModel())
+            // using (var connection = factory.CreateConnection())
+            // using (var channel = connection.CreateModel())
+            using (var channel = GetConnection().CreateModel())
             {
                 channel.QueueDeclare(queue: "MyQueue",
                                durable: false,
@@ -96,10 +96,6 @@ namespace Rabbit.WebApi.Services
                                basicProperties: null,
                                body: body);
             }
-        }
-
-   
-
-
+       }
     }
 }
