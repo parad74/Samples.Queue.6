@@ -40,6 +40,9 @@ namespace Worker.RabbitMq.Consumer
                 UserName = this._options.UserName,
                 Password = this._options.Password,
                 VirtualHost = this._options.UserName,
+                // Включение автоматического восстановления
+                // соединения после сбоев сети 
+                AutomaticRecoveryEnabled = true
             };
 
             _connection = factory.CreateConnection();
@@ -95,10 +98,28 @@ namespace Worker.RabbitMq.Consumer
 
         public override void Dispose()
         {
-            
-            this._customersChannel.Close();
-            this._ordersChannel.Close();
-            this._connection.Close();
+             if (_customersChannel != null)
+            {
+                if (_customersChannel.IsOpen)
+                {
+                    _customersChannel.Close();
+                }
+            }
+
+            if (_ordersChannel != null)
+            {
+                if (_ordersChannel.IsOpen)
+                {
+                    _ordersChannel.Close();
+                }
+            }
+            if (_connection != null)
+            {
+                if (_connection.IsOpen)
+                {
+                    _connection.Close();
+                }
+            }
             base.Dispose();
         }
     }

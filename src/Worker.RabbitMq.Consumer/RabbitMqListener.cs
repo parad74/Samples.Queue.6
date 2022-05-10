@@ -26,6 +26,9 @@ public class RabbitMqListener : BackgroundService
 		factory.UserName = "guesti";
 		factory.Password = "guest";
 		factory.HostName = "localhost";
+		// Включение автоматического восстановления
+		// соединения после сбоев сети 
+		factory.AutomaticRecoveryEnabled = true;
 
 		this._connection = factory.CreateConnection();
 		this._channel = _connection.CreateModel();
@@ -37,13 +40,16 @@ public class RabbitMqListener : BackgroundService
 		stoppingToken.ThrowIfCancellationRequested();
 
 		var consumer = new EventingBasicConsumer(this._channel);
+		//var consumer = new AsyncEventingBasicConsumer(_model);
 		consumer.Received += (ch, ea) =>
 		{
-			var content = Encoding.UTF8.GetString(ea.Body.ToArray());
-
+			var body = ea.Body.ToArray();
+			var content = Encoding.UTF8.GetString(body);
+			
 			// Каким-то образом обрабатываем полученное сообщение
 			Debug.WriteLine($"Получено сообщение: {content}");
-
+			//var result = JsonConvert.DeserializeObject<T>(content);
+			//	string queueName = _channel.QueueDeclare().QueueName;
 			this._channel.BasicAck(ea.DeliveryTag, false);
 		};
 
@@ -54,8 +60,20 @@ public class RabbitMqListener : BackgroundService
 
 	public override void Dispose()
 	{
-		this._channel.Close();
-		this._connection.Close();
+		if (_channel != null)
+		{
+			if (_channel.IsOpen)
+			{
+				_channel.Close();
+			}
+		}
+		if (_connection != null)
+		{
+			if (_connection.IsOpen)
+			{
+				_connection.Close();
+			}
+		}
 		base.Dispose();
 	}
 }
